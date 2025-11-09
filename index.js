@@ -57,6 +57,28 @@ async function run() {
     })
 
 
+    app.patch(`/BrowseCars/:id`, async(req, res) => {
+        const params = req.params.id;
+        const updateInfo = req.body;
+        const query = {_id: new ObjectId(params)};
+        const update = { $set:{status: updateInfo.status, bookedBy: updateInfo.bookedBy}}
+        const result = await AllCarsPost.updateOne(query, update)
+        console.log(result)
+        res.send(result)
+
+    })
+
+
+
+    app.get("/MyListings", async(req, res) => {
+      const query = req.query.email
+      const check = {email: query}
+      const cursor = AllCarsPost.find(check)
+      const result = await cursor.toArray()
+      res.send(result)
+    })
+
+
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
