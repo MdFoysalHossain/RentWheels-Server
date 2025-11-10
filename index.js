@@ -136,6 +136,8 @@ async function run() {
       res.send(result)
     })
 
+
+    // Remove my booking
     app.patch("/MyBookings/:id", async(req, res) => {
       const id = req.params.id
       const query = {_id: new ObjectId(id)}
@@ -147,6 +149,15 @@ async function run() {
 
       const result = await AllCarsPost.updateOne(query, update)
       console.log("Removed Booking:", result)
+      res.send(result)
+    })
+
+
+
+
+    app.get("/NewestCars", async(req, res) => {
+      const data =  AllCarsPost.find().sort({ createdAt: -1 });
+      const result = await data.toArray()
       res.send(result)
     })
 
