@@ -35,56 +35,94 @@ async function run() {
     const RentWheelsDB = client.db("RentWheels");
     const AllCarsPost = RentWheelsDB.collection("AllCarsPost");
 
-    app.post("/AddCar", async(req, res) => {
+    app.post("/AddCar", async (req, res) => {
       const data = req.body;
       const result = await AllCarsPost.insertOne(data)
       console.log(result)
     })
 
-    app.get("/BrowseCars", async(req, res) => {
+    app.get("/BrowseCars", async (req, res) => {
       const cursor = AllCarsPost.find()
       const result = await cursor.toArray()
       res.send(result)
     })
 
-    app.get(`/BrowseCars/:id`, async(req, res) => {
+    app.get(`/BrowseCars/:id`, async (req, res) => {
       const params = req.params.id;
       console.log(params)
-      const query = {_id: new ObjectId(params)}
+      const query = { _id: new ObjectId(params) }
       const result = await AllCarsPost.findOne(query)
       console.log(result)
       res.send(result)
     })
 
 
-    app.patch(`/BrowseCars/:id`, async(req, res) => {
-        const params = req.params.id;
-        const updateInfo = req.body;
-        const query = {_id: new ObjectId(params)};
-        const update = { $set:{status: updateInfo.status, bookedBy: updateInfo.bookedBy}}
-        const result = await AllCarsPost.updateOne(query, update)
-        console.log(result)
-        res.send(result)
+    app.patch(`/BrowseCars/:id`, async (req, res) => {
+      const params = req.params.id;
+      const updateInfo = req.body;
+      const query = { _id: new ObjectId(params) };
+      const update = { $set: { status: updateInfo.status, bookedBy: updateInfo.bookedBy } }
+      const result = await AllCarsPost.updateOne(query, update)
+      console.log(result)
+      res.send(result)
 
     })
 
 
 
-    app.get("/MyListings", async(req, res) => {
+    app.get("/MyListings", async (req, res) => {
       const query = req.query.email
-      const check = {email: query}
+      const check = { email: query }
       const cursor = AllCarsPost.find(check)
       const result = await cursor.toArray()
       res.send(result)
     })
 
-    app.delete("/MyListings/:id", async(req,res) => {
+    app.delete("/MyListings/:id", async (req, res) => {
       const id = req.params.id;
       console.log(id)
-      const query = {_id: new ObjectId(id)}
+      const query = { _id: new ObjectId(id) }
       const result = await AllCarsPost.deleteOne(query)
       console.log("Deleted:", result)
       res.send(result)
+    })
+
+
+    // Book Car Patch
+    app.patch("/MyListings/:id", async (req, res) => {
+      const params = req.params.id;
+      const updateInfo = req.body;
+      const query = { _id: new ObjectId(params) };
+      const update = { $set: { status: updateInfo.status, bookedBy: updateInfo.bookedBy } }
+      const result = await AllCarsPost.updateOne(query, update)
+      console.log("Updated:", result)
+
+      res.send(result)
+
+    })
+
+    // Patch My Listing
+    app.patch("/MyListingsUpdate/:id", async (req, res) => {
+      const params = req.params.id;
+      const updateInfo = req.body;
+      const query = { _id: new ObjectId(params) };
+      const update = {
+        $set: {
+          carName: updateInfo.carName,
+          description: updateInfo.description,
+          category: updateInfo.category,
+          rentPrice: updateInfo.rentPrice,
+          location: updateInfo.location,
+          imageUrl: updateInfo.imageUrl,
+          email: updateInfo.email,
+          name: updateInfo.name,
+        }
+      }
+      const result = await AllCarsPost.updateOne(query, update)
+      console.log("Updated:", updateInfo)
+
+      // res.send(result)
+
     })
 
 
