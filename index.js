@@ -120,9 +120,34 @@ async function run() {
       }
       const result = await AllCarsPost.updateOne(query, update)
       console.log("Updated:", updateInfo)
+      res.send(result)
 
-      // res.send(result)
+    })
 
+
+
+
+    // Get My Bookings
+    app.get("/MyBookings", async(req, res) => {
+      const email = req.query.email;
+      const query = {bookedBy: email}
+      const cursor = AllCarsPost.find(query)
+      const result = await cursor.toArray()
+      res.send(result)
+    })
+
+    app.patch("/MyBookings/:id", async(req, res) => {
+      const id = req.params.id
+      const query = {_id: new ObjectId(id)}
+      const update = { 
+        $set: {
+          bookedBy: "",
+          status: "Available"
+      }}
+
+      const result = await AllCarsPost.updateOne(query, update)
+      console.log("Removed Booking:", result)
+      res.send(result)
     })
 
 
