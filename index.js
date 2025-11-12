@@ -24,6 +24,7 @@ const client = new MongoClient(uri, {
 
 app.get("/", (req, res) => {
   res.send("Server is Alive")
+  console.log(process.env.MONGO_USERNAME, process.env.MONGO_PASS)
 })
 
 
@@ -170,6 +171,8 @@ async function run() {
   }
 }
 run().catch(console.dir);
+
+
 
 // app.listen(port)
 module.exports = app;
