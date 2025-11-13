@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 async function run() {
 
   try {
-    await client.connect();
+    // await client.connect();
 
     const RentWheelsDB = client.db("RentWheels");
     const AllCarsPost = RentWheelsDB.collection("AllCarsPost");
@@ -174,5 +174,5 @@ run().catch(console.dir);
 
 
 
-// app.listen(port)
-module.exports = app;
+app.listen(port)
+// module.exports = app;
